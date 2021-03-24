@@ -1,0 +1,8 @@
+ibmcloud/vpc/vsi/bash/
+ibmcloud/vpc/vsi/bash/config.local
+ibmcloud/vpc/vsi/bash/id_rsa
+ibmcloud/vpc/vsi/bash/id_rsa.pub
+ibmcloud/vpc/vsi/bash/lumina_id_rsa
+ibmcloud/vpc/vsi/bash/lumina_id_rsa.pub
+ibmcloud/vpc/vsi/terraform/
+ibmcloud/vpc/vsi/bash/vsi-for-vpc-gen2-bulk.sh
