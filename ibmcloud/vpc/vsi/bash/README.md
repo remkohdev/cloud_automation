@@ -8,6 +8,11 @@ cd ibmcloud/vpc/vsi/bash
 chmod +x vsi-for-vpc-gen2.sh
 ```
 
+## Pre-requirements
+
+* [IBM Cloud CLI](https://cloud.ibm.com/docs/cli?topic=cli-getting-started),
+* [jq function](https://stedolan.github.io/jq/manual/),
+
 ## Configuration
 
 Create and edit a new file "config.local",
