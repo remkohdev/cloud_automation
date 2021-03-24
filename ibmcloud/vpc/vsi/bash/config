@@ -1,0 +1,14 @@
+naming_prefix=<naming-prefix>
+ibmcloud_apikey=<your-ibmcloud-apikey>
+ibmcloud_resource_group=default
+ibmcloud_region=us-east
+ibmcloud_zone=us-east-1
+instances_per_subnet=1
+instances_per_subnet_offset=1
+ssh_key_file_path=./<naming-prefix>_id_rsa.pub
+ssh_key_name=<your-ibmcloud-is-sshkey>
+instance_image_id=r014-6e732c5c-673b-42bd-911e-5a05e1c9b9b2
+instance_profile=cx2-4x8
+vpc_name=<naming-prefix>-vpc-1
+subnet_name=<naming-prefix>-vpc-1-subnet-1
+public_gateway_name=<naming-prefix>-vpc-1-subnet-1-gw-1

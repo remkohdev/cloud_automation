@@ -1,4 +1,3 @@
-ibmcloud/vpc/vsi/bash/
 ibmcloud/vpc/vsi/bash/config.local
 ibmcloud/vpc/vsi/bash/id_rsa
 ibmcloud/vpc/vsi/bash/id_rsa.pub
