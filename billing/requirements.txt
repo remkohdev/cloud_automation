@@ -1,0 +1,7 @@
+argparse==1.2.1 
+PyGithub==1.54.1
+pyzenhub==0.2.1
+pandas==1.2.1
+pytest-pylint==0.18.0
+requests==2.25.1
+fsspec==0.8.7

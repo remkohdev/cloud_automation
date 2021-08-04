@@ -56,12 +56,12 @@ declare -F ibmcloud &>/dev/null && echo "ibmcloud found." || echo "ibmcloud not 
 declare -F jq &>/dev/null && echo "jq found." || echo "jq not found." : exit 1
 
 # ibmcloud login
-echo "----->login"
-ibmcloud login --apikey $ibmcloud_apikey
-if [ "$?" = "1" ]; then
-  echo "ERROR: ibmcloud login failed"
-  exit 1
-fi
+#echo "----->login"
+#ibmcloud login -sso #--apikey $ibmcloud_apikey
+#if [ "$?" = "1" ]; then
+#  echo "ERROR: ibmcloud login failed"
+#  exit 1
+#fi
 
 echo "----->target"
 # ibmcloud resource groups and regions
@@ -177,6 +177,8 @@ fi
 
 lowerlimit=$instances_per_subnet_offset
 upperlimit=$((instances_per_subnet_offset + instances_per_subnet))
+echo "lowerlimit=$lowerlimit"
+echo "upperlimit=$upperlimit"
 for instance_nr in $(seq -f "%03g" $upperlimit $lowerlimit);
   do
     echo "processing instance_nr=$instance_nr"

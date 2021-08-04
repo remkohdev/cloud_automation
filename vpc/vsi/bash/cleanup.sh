@@ -80,19 +80,48 @@ for instance_nr in $(seq -f "%03g" $upperlimit $lowerlimit);
     MY_INSTANCE_NAME="$naming_prefix-$instance_nr"
     echo "MY_INSTANCE_NAME=$MY_INSTANCE_NAME"
     MY_INSTANCE_ID=$(ibmcloud is instances --output json | jq -r '.[] | select( .name=='\"$MY_INSTANCE_NAME\"') | .id ')
+    if [ "$?" = "1" ]; then
+      echo "ERROR: ibmcloud is instances failed"
+      exit 1
+    fi
+    if [ -z "$MY_INSTANCE_ID" ]; then
+      echo "ERROR: instance id not found for instance $MY_INSTANCE_NAME"
+      exit 1
+    fi
     echo "MY_INSTANCE_ID=$MY_INSTANCE_ID"
 
     NIC_ID=$(ibmcloud is instance-network-interfaces $MY_INSTANCE_ID --output json | jq -r '.[0].id')
+    if [ "$?" = "1" ]; then
+      echo "ERROR: ibmcloud is instance-network-interfaces failed"
+      exit 1
+    fi
+    if [ -z "$NIC_ID" ]; then
+      echo "ERROR: nic id not found for instance $MY_INSTANCE_ID"
+      exit 1
+    fi
     echo "NIC_ID=$NIC_ID"
 
     # for all
     NIC_FLOATING_IP=$(ibmcloud is instance-network-interface-floating-ips $MY_INSTANCE_ID $NIC_ID --output json | jq -r '.[0].id')
+    if [ "$?" = "1" ]; then
+      echo "ERROR: ibmcloud is instance-network-interface-floating-ips failed"
+      exit 1
+    fi
     echo "NIC_FLOATING_IP=$NIC_FLOATING_IP"
     #ibmcloud is instance-network-interface-floating-ip-remove $MY_INSTANCE_ID $NIC_ID $NIC_FLOATING_IP --force
 
     ibmcloud is floating-ip-release $NIC_FLOATING_IP --force
+    if [ "$?" = "1" ]; then
+      echo "ERROR: ibmcloud is floating-ip-release failed"
+      exit 1
+    fi
+
     echo "----->instance-delete"
     ibmcloud is instance-delete $MY_INSTANCE_ID --force
+    if [ "$?" = "1" ]; then
+      echo "ERROR: ibmcloud is instance-delete failed"
+      exit 1
+    fi
 
   done
 

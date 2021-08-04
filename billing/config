@@ -1,0 +1,17 @@
+{
+    "credentials": {
+        "ibm_cloud_apikey" : "XXX",
+        "github_personal_access_token" : "XXX",
+        "zen_access_token" : "XXX",
+        "trello_token" "XXX"
+    },
+    "github" : {
+        "api_baseurl": "https://github.ibm.com/api/v3",
+        "owner": "XXX",
+        "repository": "XXX"
+    },
+    "endpoints": {
+        "git_enterprise_api_baseurl": "https://github.ibm.com/api/v3",
+        "zenhub_enterprise_api_baseurl": "https://zenhub.ibm.com"
+    }
+}
