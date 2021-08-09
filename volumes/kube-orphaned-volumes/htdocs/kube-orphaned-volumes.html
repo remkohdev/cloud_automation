@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clusters</title>
+    <style>
+        table, th, td {
+          border: 1px solid black;
+        }
+        table {
+          border-collapse: collapse;
+          margin-left: 50px;
+        }
+        </style>
+</head>
+<body>
+<h1>IBM Cloud Account Management</h1>
+
+<!-- load the d3.js library --> 
+<script src="https://d3js.org/d3.v6.min.js"></script>
+<script>
+function tabulate(data, columns) {
+    var table = d3.select("body").append("table"),
+        thead = table.append("thead"),
+        tbody = table.append("tbody");
+
+    // append the header row
+    thead.append("tr")
+        .selectAll("th")
+        .data(columns)
+        .enter()
+        .append("th")
+            .text(function(column) { return column; });
+
+    // create a row for each object in the data
+    var rows = tbody.selectAll("tr")
+        .data(data)
+        .enter()
+        .append("tr");
+
+    // create a cell in each row for each column
+    var cells = rows.selectAll("td")
+        .data(function(row) {
+            return columns.map(function(column) {
+                return {column: column, value: row[column]};
+            });
+        })
+        .enter()
+        .append("td")
+        .attr("style", "font-family: Courier") // sets the font style
+            .html(function(d) { return d.value; });
+    
+    return table;
+}
+
+d3.select("p").style("color", "green");
+
+d3.json("clusterVolumes.json").then(function(volumes, error) {
+
+    d3.select("body").append("h2").text("Orphaned Volumes Count")
+
+    var true_count_block = volumes.reduce(function(count, v) { 
+        return count + ((v.cluster_exists === true && v.volume_type==="block") ? 1 : 0);
+    }, 0);
+    var false_count_block = volumes.reduce(function(count, v) { 
+        return count + ((v.cluster_exists === false && v.volume_type==="block") ? 1 : 0);
+    }, 0);
+    var true_count_file = volumes.reduce(function(count, v) { 
+        return count + ((v.cluster_exists === true && v.volume_type==="file") ? 1 : 0);
+    }, 0);
+    var false_count_file = volumes.reduce(function(count, v) { 
+        return count + ((v.cluster_exists === false && v.volume_type==="file") ? 1 : 0);
+    }, 0);
+    
+    data1 = [
+        { 
+            "existing_volumes_block": true_count_block, 
+            "orphaned_volumes_block": false_count_block,
+            "existing_volumes_file": true_count_file, 
+            "orphaned_volumes_file": false_count_file,
+            "existing_volumes_total": (true_count_block+true_count_file), 
+            "orphaned_volumes_total": (false_count_block+false_count_file),
+        }
+    ];
+    console.log(data1)
+    columns1 = [
+        "existing_volumes_block",
+        "orphaned_volumes_block",
+        "existing_volumes_file",
+        "orphaned_volumes_file",
+        "existing_volumes_total",
+        "orphaned_volumes_total"
+    ];
+    tabulate(data1, columns1);
+
+    d3.select("body").append("h2").text("Orphaned Volumes Details")
+
+    data2 = volumes;
+    columns2 = [
+        "volume_id", "volume_type", "cluster_id", "cluster_exists"
+    ];
+    
+    tabulate(data2, columns2);
+
+});
+
+
+</script>
+</body>
+</html>
