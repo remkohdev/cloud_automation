@@ -115,6 +115,7 @@ def get_access_token():
     access_token=response.json()['access_token']
     return access_token
 
+
 def get_resources_for_resourcegroup(rg_id):
     """Get resource instance usage in a resource group"""
 
@@ -141,6 +142,7 @@ def get_resources_for_resourcegroup(rg_id):
 
     resources = response.json()['resources']
     return resources
+
 
 def get_resourcegroups():
     """GET /resourcegroups"""

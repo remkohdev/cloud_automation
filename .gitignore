@@ -10,3 +10,7 @@ vpc/vsi/bash/vsi-for-vpc-gen2-bulk.sh
 vpc/vsi/terraform/
 config.local
 .DS_Store
+
+volumes/kube-orphaned-volumes/sort.py
+volumes/kube-orphaned-volumes/output
+volumes/kube-orphaned-volumes/**/clusterVolumes.json

@@ -1,0 +1,1075 @@
+{
+	"info": {
+		"_postman_id": "17a55fe2-46a6-4b25-ace0-3773fe1f3948",
+		"name": "IBM_Billing_and_Usage",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authorization",
+			"item": [
+				{
+					"name": "/iam/token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pass = true;",
+									"fail = false;",
+									"try {",
+									"    resp = JSON.parse(pm.response.text());",
+									"    ",
+									"    pm.test(\"Check response to have status 200\", function () {",
+									"        pm.response.to.have.status(200);",
+									"    });",
+									"    ",
+									"    pm.test(\"Check response includes access_token\", function () {",
+									"        pm.expect(pm.response.text()).to.include(\"access_token\");",
+									"    });",
+									"",
+									"    pm.test(\"Check response includes refresh_token\", function () {",
+									"        pm.expect(pm.response.text()).to.include(\"refresh_token\");",
+									"    });",
+									"    ",
+									"    pm.globals.set(\"iam_access_token\", resp[\"access_token\"]);  ",
+									"    pm.globals.set(\"iam_refresh_token\", resp[\"refresh_token\"]);  ",
+									"}",
+									"catch(err) {",
+									"    tests[\"Parse response JSON or tests initialisation\"] = fail;",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "apikey",
+									"value": "{{iam_apikey}}",
+									"type": "text"
+								},
+								{
+									"key": "response_type",
+									"value": "cloud_iam",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "urn:ibm:params:oauth:grant-type:apikey",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://iam.cloud.ibm.com/identity/token",
+							"protocol": "https",
+							"host": [
+								"iam",
+								"cloud",
+								"ibm",
+								"com"
+							],
+							"path": [
+								"identity",
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Billing",
+			"item": [
+				{
+					"name": "/summary/{{month}}",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{iam_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "urn:ibm:params:oauth:grant-type:apikey",
+									"type": "text"
+								},
+								{
+									"key": "apikey",
+									"value": "iam_apikey",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://billing.cloud.ibm.com/v4/accounts/{{hcbt_account_id}}/summary/2021-01",
+							"protocol": "https",
+							"host": [
+								"billing",
+								"cloud",
+								"ibm",
+								"com"
+							],
+							"path": [
+								"v4",
+								"accounts",
+								"{{hcbt_account_id}}",
+								"summary",
+								"2021-01"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/resource-group/usage/{{month}}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pass = true;",
+									"fail = false;",
+									"try {",
+									"    resp = JSON.parse(pm.response.text());",
+									"    ",
+									"    pm.test(\"Check response to have status 200\", function () {",
+									"        pm.response.to.have.status(200);",
+									"    });",
+									"",
+									"    pm.test(\"Check response includes resources\", function () {",
+									"        pm.expect(pm.response.text()).to.include(\"resources\");",
+									"    });",
+									"    ",
+									"    pm.globals.set(\"resource_id\", resp[\"resources\"][0][\"resource_id\"]);  ",
+									"}",
+									"catch(err) {",
+									"    tests[\"Parse response JSON or tests initialisation\"] = fail;",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{iam_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "urn:ibm:params:oauth:grant-type:apikey",
+									"type": "text"
+								},
+								{
+									"key": "apikey",
+									"value": "iam_apikey",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://billing.cloud.ibm.com/v4/accounts/{{hcbt_account_id}}/resource_groups/{{rg_id}}/resource_instances/usage/2021-07",
+							"protocol": "https",
+							"host": [
+								"billing",
+								"cloud",
+								"ibm",
+								"com"
+							],
+							"path": [
+								"v4",
+								"accounts",
+								"{{hcbt_account_id}}",
+								"resource_groups",
+								"{{rg_id}}",
+								"resource_instances",
+								"usage",
+								"2021-07"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/resource-group/usage/{{month}} Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pass = true;",
+									"fail = false;",
+									"try {",
+									"    resp = JSON.parse(pm.response.text());",
+									"    ",
+									"    pm.test(\"Check response to have status 200\", function () {",
+									"        pm.response.to.have.status(200);",
+									"    });",
+									"",
+									"    pm.test(\"Check response includes resources\", function () {",
+									"        pm.expect(pm.response.text()).to.include(\"resources\");",
+									"    });",
+									"    ",
+									"    pm.globals.set(\"resource_id\", resp[\"resources\"][0][\"resource_id\"]);  ",
+									"}",
+									"catch(err) {",
+									"    tests[\"Parse response JSON or tests initialisation\"] = fail;",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{iam_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "urn:ibm:params:oauth:grant-type:apikey",
+									"type": "text"
+								},
+								{
+									"key": "apikey",
+									"value": "iam_apikey",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://billing.cloud.ibm.com/v4/accounts/{{hcbt_account_id}}/organizations/{{organization_id}}/resource_instances/usage/2021-07",
+							"protocol": "https",
+							"host": [
+								"billing",
+								"cloud",
+								"ibm",
+								"com"
+							],
+							"path": [
+								"v4",
+								"accounts",
+								"{{hcbt_account_id}}",
+								"organizations",
+								"{{organization_id}}",
+								"resource_instances",
+								"usage",
+								"2021-07"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/usage/{{month}}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pass = true;",
+									"fail = false;",
+									"try {",
+									"    resp = JSON.parse(pm.response.text());",
+									"    ",
+									"    pm.test(\"Check response to have status 200\", function () {",
+									"        pm.response.to.have.status(200);",
+									"    });",
+									"",
+									"    pm.test(\"Check response includes resources\", function () {",
+									"        pm.expect(pm.response.text()).to.include(\"resources\");",
+									"    });",
+									"    ",
+									"    pm.globals.set(\"resource_id\", resp[\"resources\"][0][\"resource_id\"]);  ",
+									"}",
+									"catch(err) {",
+									"    tests[\"Parse response JSON or tests initialisation\"] = fail;",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{iam_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "urn:ibm:params:oauth:grant-type:apikey",
+									"type": "text"
+								},
+								{
+									"key": "apikey",
+									"value": "iam_apikey",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://billing.cloud.ibm.com/v4/accounts/{{hcbt_account_id}}/usage/2021-01",
+							"protocol": "https",
+							"host": [
+								"billing",
+								"cloud",
+								"ibm",
+								"com"
+							],
+							"path": [
+								"v4",
+								"accounts",
+								"{{hcbt_account_id}}",
+								"usage",
+								"2021-01"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Resource-Controller",
+			"item": [
+				{
+					"name": "/resource-groups",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{iam_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{iam_access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "apikey",
+									"value": "iam_apikey",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "urn:ibm:params:oauth:grant-type:apikey",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://resource-controller.cloud.ibm.com/v2/resource_groups/",
+							"protocol": "https",
+							"host": [
+								"resource-controller",
+								"cloud",
+								"ibm",
+								"com"
+							],
+							"path": [
+								"v2",
+								"resource_groups",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/resources/{{id}}",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{iam_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{iam_access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "apikey",
+									"value": "iam_apikey",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "urn:ibm:params:oauth:grant-type:apikey",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://resource-controller.cloud.ibm.com/v2/resource_instances/bu7in9kd0g0b26ckgn50",
+							"protocol": "https",
+							"host": [
+								"resource-controller",
+								"cloud",
+								"ibm",
+								"com"
+							],
+							"path": [
+								"v2",
+								"resource_instances",
+								"bu7in9kd0g0b26ckgn50"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/resources",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{iam_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{iam_access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "apikey",
+									"value": "iam_apikey",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "urn:ibm:params:oauth:grant-type:apikey",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://resource-controller.cloud.ibm.com/v2/resource_instances?start=5000",
+							"protocol": "https",
+							"host": [
+								"resource-controller",
+								"cloud",
+								"ibm",
+								"com"
+							],
+							"path": [
+								"v2",
+								"resource_instances"
+							],
+							"query": [
+								{
+									"key": "start",
+									"value": "5000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/quota_definitions",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{iam_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{iam_access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "apikey",
+									"value": "iam_apikey",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "urn:ibm:params:oauth:grant-type:apikey",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://resource-controller.cloud.ibm.com/v2/quota_definitions",
+							"protocol": "https",
+							"host": [
+								"resource-controller",
+								"cloud",
+								"ibm",
+								"com"
+							],
+							"path": [
+								"v2",
+								"quota_definitions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/quota_definitions/{{id}}",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{iam_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{iam_access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "apikey",
+									"value": "iam_apikey",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "urn:ibm:params:oauth:grant-type:apikey",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://resource-controller.cloud.ibm.com/v2/quota_definitions/65012f5b6fa84ecaaac5eab4abc2d0fd",
+							"protocol": "https",
+							"host": [
+								"resource-controller",
+								"cloud",
+								"ibm",
+								"com"
+							],
+							"path": [
+								"v2",
+								"quota_definitions",
+								"65012f5b6fa84ecaaac5eab4abc2d0fd"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/resource-groups",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{iam_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{iam_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "urn:ibm:params:oauth:grant-type:apikey",
+									"type": "text"
+								},
+								{
+									"key": "apikey",
+									"value": "iam_apikey",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://resource-controller.cloud.ibm.com/v2/resource_groups/{{rg_id}}?account_id={{hcbt_account_id}}&date=2020-01",
+							"protocol": "https",
+							"host": [
+								"resource-controller",
+								"cloud",
+								"ibm",
+								"com"
+							],
+							"path": [
+								"v2",
+								"resource_groups",
+								"{{rg_id}}"
+							],
+							"query": [
+								{
+									"key": "account_id",
+									"value": "{{hcbt_account_id}}"
+								},
+								{
+									"key": "date",
+									"value": "2020-01"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/resource-groups/{{rg-id}}",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{iam_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{iam_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "urn:ibm:params:oauth:grant-type:apikey",
+									"type": "text"
+								},
+								{
+									"key": "apikey",
+									"value": "iam_apikey",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://resource-controller.cloud.ibm.com/v2/resource_groups/{{rg_id}}",
+							"protocol": "https",
+							"host": [
+								"resource-controller",
+								"cloud",
+								"ibm",
+								"com"
+							],
+							"path": [
+								"v2",
+								"resource_groups",
+								"{{rg_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Kubernetes-Service",
+			"item": [
+				{
+					"name": "/clusters/{idOrName}",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{iam_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{iam_access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "apikey",
+									"value": "iam_apikey",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "urn:ibm:params:oauth:grant-type:apikey",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://containers.cloud.ibm.com/global/v1/clusters/bu7in9kd0g0b26ckgn50",
+							"protocol": "https",
+							"host": [
+								"containers",
+								"cloud",
+								"ibm",
+								"com"
+							],
+							"path": [
+								"global",
+								"v1",
+								"clusters",
+								"bu7in9kd0g0b26ckgn50"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Accounts",
+			"item": [
+				{
+					"name": "/users",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{iam_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{iam_access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "apikey",
+									"value": "iam_apikey",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "urn:ibm:params:oauth:grant-type:apikey",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://user-management.cloud.ibm.com/v2/accounts/{{hcbt_account_id}}/users",
+							"protocol": "https",
+							"host": [
+								"user-management",
+								"cloud",
+								"ibm",
+								"com"
+							],
+							"path": [
+								"v2",
+								"accounts",
+								"{{hcbt_account_id}}",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "IAM",
+			"item": [
+				{
+					"name": "/policies",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{iam_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{iam_access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "apikey",
+									"value": "iam_apikey",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "urn:ibm:params:oauth:grant-type:apikey",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://iam.cloud.ibm.com/v1/policies?account_id={{hcbt_account_id}}",
+							"protocol": "https",
+							"host": [
+								"iam",
+								"cloud",
+								"ibm",
+								"com"
+							],
+							"path": [
+								"v1",
+								"policies"
+							],
+							"query": [
+								{
+									"key": "account_id",
+									"value": "{{hcbt_account_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
