@@ -4,6 +4,7 @@
 
 * [Create Virtual Server Instances (VSIs) on VPC Gen2](vpc/vsi/bash/),
 * [Bulk Create Virtual Server Instances (VSIs) on VPC Gen2](vpc/vsi/bash/),
+* [Cancel Kubernetes Orphaned Volumes](volumes/kube-orphaned-volumes)
 
 ## Python
 
