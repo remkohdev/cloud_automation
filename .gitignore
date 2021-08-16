@@ -1,7 +1,7 @@
 admin/
 archive/
 go/
-billing/htdocs/
+billing/htdocs/cost-report*
 billing/cost-report*
 billing/config.local
 vpc/vsi/bash/config.local
