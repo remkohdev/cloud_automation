@@ -206,12 +206,12 @@ for resourcegroup in resourcegroups:
 print("----->2 - write to file")
 if OUTPUT_FORMAT == "json":
     with open(OUTPUT_FILE_NAME, 'w') as fp:
-        json.dump(resources, fp)
+        json.dump(report_lines, fp)
 elif OUTPUT_FORMAT == "csv":
     df = pd.read_json(json.dumps(report_lines))
     df.to_csv(OUTPUT_FILE_NAME)
 else:
     with open(OUTPUT_FILE_NAME, 'w') as fp:
-        json.dump(resources, fp)
+        json.dump(report_lines, fp)
 
 print("----->The End")
