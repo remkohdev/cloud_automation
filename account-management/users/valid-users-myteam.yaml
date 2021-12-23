@@ -11,7 +11,7 @@ users:
     name: John Doe
     title: Cloud Solutions Architect
     identities:
-      - joeh.doe
+      - joe.doe
       - doe
     resourceGroups:
       - project1-rg

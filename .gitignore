@@ -17,5 +17,5 @@ volumes/kube-orphaned-volumes/output
 volumes/kube-orphaned-volumes/**/clusterVolumes.json
 
 account-management/users/build/
-account-management/users/users-2058850.yaml
+account-management/users/valid-users-hcbt.yaml
 account-management/build/

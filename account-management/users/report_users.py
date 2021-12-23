@@ -173,6 +173,7 @@ with open(CONFIG_FILE) as jsonfile:
 with open(USERS_FILE, 'r') as stream:
     data_json = yaml.load(stream, Loader=Loader)
     report=[]
+    valid_users = []
 
     users = data_json["users"]
 
@@ -180,14 +181,16 @@ with open(USERS_FILE, 'r') as stream:
         associations=get_associations_from_users(users)
         for association in associations:
             users_for_association=get_users_for_association(association, users)
-            report.append({ "association": association, "users": users_for_association})
+            valid_users.append({ "association": association, "users": users_for_association})
     else:
         managers=get_managers_from_users(users)
         for manager in managers:
             users_for_manager=get_users_for_manager(manager["email"], users)
-            report.append({ "manager": manager, "users": users_for_manager})
+            valid_users.append({ "manager": manager, "users": users_for_manager})
 
-    write_to_file(report)
+    write_to_file(valid_users)
+
+    
     
     #print as yaml
     #print(yaml.dump(data_json, Dumper=Dumper))
