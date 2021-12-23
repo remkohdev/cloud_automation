@@ -102,9 +102,9 @@ def init():
     IBMCLOUD_ACCOUNT_USERS_OUTPUT_FILENAME = ('{}/ibmcloud_users_{}_{}.{}').format(OUTPUT_DIR, IBMCLOUD_ORG_ACCOUNTID, date_time, OUTPUT_FORMAT)
 
     print(
-        ("Running Users Report using Config File: {}, Report Type: {}, Output format: {}, " +
-         "Valid Users File: {}, Valid Users Output File: {}, IBM Cloud Account Output file: {} " +
-         "Users Report Output File: {}")
+        ("Running Users Report using Config File: {}, Ordered By: {}, Output format: {}, " +
+         "Valid Users File: {}, Valid Users Output File: {}, IBM Cloud Account Output file: {}, " +
+         "Ordered Users Report Output File: {}, Unordered Users Report Output File: {}")
         .format(
             CONFIG_FILE,
             ORDER_BY,
@@ -112,7 +112,8 @@ def init():
             USERS_FILE,
             VALID_USERS_OUTPUT_FILENAME,
             IBMCLOUD_ACCOUNT_USERS_OUTPUT_FILENAME,
-            USERS_REPORT_ORDERED_OUTPUT_FILENAME
+            USERS_REPORT_ORDERED_OUTPUT_FILENAME,
+            USERS_REPORT_UNORDERED_OUTPUT_FILENAME
         )
     )
 
@@ -143,41 +144,34 @@ def get_users_for_manager(manager, valid_users):
     """get_users_for_manager(manager, valid_users)"""
 
     users_for_manager=[]
-
     for user in valid_users:
-        
         user_manager_email=user["manager"]
-        
         if (user_manager_email == manager["email"]):
             users_for_manager.append(user)
-    
     return users_for_manager
 
+
 def get_associations_from_users(users):
-    """get_users_for_association(association, users)"""
+    """get_associations_from_users(users)"""
 
     associations=[]
-
     for user in users:
         user_association=user["association"]
-
         if (user_association not in associations):
             associations.append(user_association)
-    
     return associations
 
-def get_users_for_association(association, users):
-    """get_users_for_association(association, users)"""
+
+def get_users_for_association(association, valid_users):
+    """get_users_for_association(association, valid_users)"""
 
     users_for_association=[]
-
-    for user in users:
+    for user in valid_users:
         user_association=user["association"]
-
         if (user_association == association):
             users_for_association.append(user)
-    
     return users_for_association
+
 
 def get_ibmcloud_access_token():
     """get_ibmcloud_access_token()"""
@@ -311,13 +305,13 @@ if(ORDER_BY=="association"):
     invalid_users_by_association = []
     for association in associations:
         valid_users_for_association=get_users_for_association(association, users_report_users["valid_account_users"])
-        invalid_users_for_association=get_users_for_association(association, users_report_users["invalid_account_users"])
-        valid_users_by_association.append(valid_users_for_association)
-        invalid_users_by_association.append(invalid_users_for_association)
-    users_report_users.append({
+        valid_users_by_association.append(
+            { "name" : association, "valid_users" : valid_users_for_association }
+        )
+    users_report_users = [{
         "valid_users_by_association" : valid_users_by_association,
-        "invalid_users_by_association" : invalid_users_by_association,
-    })
+        "invalid_users" : users_report_users["invalid_account_users"],
+    }]
 else:
     managers=get_managers_from_users(valid_users)
     valid_users_by_manager = []
