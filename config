@@ -10,6 +10,9 @@
         "owner": "XXX",
         "repository": "XXX"
     },
+    "account" : {
+        "accountid" : "XXX"
+    },
     "endpoints": {
         "git_enterprise_api_baseurl": "https://github.ibm.com/api/v3",
         "zenhub_enterprise_api_baseurl": "https://zenhub.ibm.com"
