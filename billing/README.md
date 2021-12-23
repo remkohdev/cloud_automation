@@ -8,6 +8,12 @@ python3 report.py -o csv -d $BILLING_DATE -a $ACCOUNT_ID -t monthly -g $GROUP_BY
 python3 report_cost_per_resource-group.py -o csv -d $BILLING_DATE -a $ACCOUNT_ID
 ```
 
+E.g.
+```bash
+ORG_ACCOUNTID=e65910fa61ce9072d64902d03f3d4774
+python3 report_cost_per_resource-group.py -o csv -d $BILLING_DATE -a $ORG_ACCOUNTID
+```
+
 ## Fixes
 
 Currently, fix report:

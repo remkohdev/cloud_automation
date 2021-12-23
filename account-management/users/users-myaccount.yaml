@@ -1,0 +1,44 @@
+users:
+  - email: j.jones@company.com
+    name: Janet Jones
+    title: Development Team Manager
+    identities:
+      - jjones
+      - jj
+    resourceGroups:
+    association: Development Team
+  - email: john.doe@company.com
+    name: John Doe
+    title: Cloud Solutions Architect
+    identities:
+      - joeh.doe
+      - doe
+    resourceGroups:
+      - project1-rg
+    manager: j.jones@company.com
+    association: Development Team
+  - email: alis.smith@company.com
+    name: Alisson Smith
+    title: Software Engineer
+    identities:
+      - as
+      - smithy
+      - ally
+      - all
+    resourceGroups:
+      - project1-rg
+    manager: j.jones@company.com
+    association: Development Team
+resource-groups:
+  - name: default
+    resources:
+      count: 257
+  - name: project1-rg
+    resources:
+      count: 5
+      issue:
+          url: https://trello.com/c/AbcdEF1gh/1-project1-deploy-vsi-for-vpc
+          status: In Progress
+          members:
+            - John Doe
+            - Alisson Smith

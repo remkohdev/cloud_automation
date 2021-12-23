@@ -34,7 +34,7 @@ Prepare,
 
 ```bash
 cd volumes/kube-orphaned-volumes
-
+ibmcloud login [-sso]
 ./get-kube-orphaned-volumes.sh
 ```
 

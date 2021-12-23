@@ -4,6 +4,7 @@ go/
 billing/htdocs/cost-report*
 billing/cost-report*
 billing/config.local
+billing/output/
 vpc/vsi/bash/config.local
 vpc/vsi/terraform/
 vpc/vsi/bash/vsi-for-vpc-gen2-bulk.sh
@@ -14,3 +15,7 @@ config.local
 volumes/kube-orphaned-volumes/sort.py
 volumes/kube-orphaned-volumes/output
 volumes/kube-orphaned-volumes/**/clusterVolumes.json
+
+account-management/users/build/
+account-management/users/users-2058850.yaml
+account-management/build/
