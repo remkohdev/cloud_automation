@@ -1,36 +1,11 @@
 #!/usr/bin/env python
 
-"""
-## Run
-
-```bash
-pip3 install -r requirements.txt
-python3 report_cost_per_resource-group.py -o csv -d 2021-08 -a 1234567890
-```
-
-## Fixes
-
-Currently, fix report:
-
-* remove first line `,0`
-* remove all `"`
-
-## Report
-
-```
-0,rg_id, rg_name, nr_of_resources, total_cost
-3,057a526703fb42c39f40a8b817073127, user1-rg,30,2184.594507
-22,5626cab685a049e58933bad6db310675, project1-rg,25,2055.599
-```
-
-"""
-
 import json
 import argparse
 import requests
 import pandas as pd
 
-with open("config.local") as jsonfile:
+with open("../config.local") as jsonfile:
     config = json.load(jsonfile)
 
     IBM_CLOUD_APIKEY=config['credentials']['ibm_cloud_apikey']
